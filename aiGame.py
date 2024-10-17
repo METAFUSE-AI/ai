@@ -1,15 +1,20 @@
 from flask import Flask, request, jsonify
-from openai import OpenAI
-from flask_cors import CORS  # CORS 모듈 가져오기
+import openai 
+from flask_cors import CORS  
 
 app = Flask(__name__)
-CORS(app)  # 모든 도메인에서의 요청을 허용하도록 설정
+CORS(app)
 
-client = OpenAI()
+# API 키는 환경 변수에서 자동으로 불러옵니다.
+
+print("aiGame 실행 전")
 
 @app.route('/game-result', methods=['POST'])
 def gameResult():
     data = request.get_json()
+    print("aiGame 실행")
+    print(f"Received request method: {request.method}")
+    print(f"Received game result: {data}")
 
     # 게임 결과 데이터를 받음
     game_stats = data.get('message', {})
@@ -23,7 +28,7 @@ def gameResult():
     # OpenAI에게 전달할 메시지 설정
     messages = [
         {
-            "role": "system", 
+            "role": "system",
             "content": (
                 "당신은 삶의 선택과 결과에 대해 문학적이고 철학적인 깊이 있는 통찰을 제공하는 전문가입니다. "
                 "사용자가 마주한 인생의 선택과 그에 따른 결과를 탐구하는 방식으로 답변을 작성하세요. "
@@ -36,18 +41,22 @@ def gameResult():
     
     # AI 피드백 생성
     try:
-        result = client.ChatCompletion.create(
-            model="gpt-4", 
+        result = openai.completions.create(
+            model="gpt-4",
             messages=messages,
-            temperature=0.8,  
-            max_tokens=500  
+            temperature=0.8,
+            max_tokens=500
         )
         chatbot_reply = result['choices'][0]['message']['content']
+        print("AI 응답: ", chatbot_reply)  # AI 응답 출력
     except Exception as e:
+        print(f"Error: {str(e)}")  # 발생한 오류 출력
         chatbot_reply = (
             "삶은 끊임없는 여정입니다. 당신이 맞닥뜨린 고난은 언젠가 빛나는 내일을 위한 밑거름이 될 것입니다. "
             "모든 것은 결국 지나가며, 당신은 더 강해질 것입니다."
         )
+        
+    print("AI 피드백 생성 완료")
             
     return jsonify({'reply': chatbot_reply})
 
