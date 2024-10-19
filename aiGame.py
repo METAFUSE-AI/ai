@@ -23,7 +23,10 @@ def gameResult():
     user_message = (f"나이: {game_stats['age']}세, 건강: {game_stats['health']}, 스트레스: {game_stats['stress']}, "
                     f"대인 관계: {game_stats['relationships']}, 돈: {game_stats['money']}. "
                     "이 사람은 끊임없는 선택의 연속 속에서 자신을 정의하고 있습니다. "
-                    "이 선택들이 그의 삶에 어떤 영향을 미치고, 어떤 길을 만들어 나가는지에 대한 철학적 통찰을 제공해 주세요.")
+                    "이 선택들이 그의 삶에 어떤 영향을 미치고, 어떤 길을 만들어 나가는지에 대한 철학적 통찰을 제공해 주세요."
+                    "응답은 1300자 이내로 하되, 문장이 자연스럽게 마무리되도록 하십시오."
+                    "해당 game_stats를 바탕으로 해당 유저의 인생을 분석하여 응답을 5줄 이내로 작성해 주세요."
+                    "이후 해당 game_stats에 대한 메타인지 피드백을 제공하며 삶에 대한 철학적인 통찰을 제공해 주세요.")
 
     # OpenAI에게 전달할 메시지 설정
     messages = [
@@ -41,7 +44,7 @@ def gameResult():
     
     # AI 피드백 생성
     try:
-        result = openai.completions.create(
+        result = openai.ChatCompletion.create(
             model="gpt-4",
             messages=messages,
             temperature=0.8,
@@ -57,8 +60,10 @@ def gameResult():
         )
         
     print("AI 피드백 생성 완료")
+    print(f"AI 피드백: {chatbot_reply}")
             
     return jsonify({'reply': chatbot_reply})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
