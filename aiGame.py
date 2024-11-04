@@ -6,6 +6,8 @@ app = Flask(__name__)
 CORS(app)
 
 # API 키는 환경 변수에서 자동으로 불러옵니다.
+# .\.venv\Scripts\activate
+# python aiGame.py
 
 print("aiGame 실행 전")
 
@@ -18,6 +20,7 @@ def gameResult():
 
     # 게임 결과 데이터를 받음
     game_stats = data.get('message', {})
+    print("Game stats received:", game_stats)
 
     # 게임 결과 데이터를 텍스트로 변환하여 AI에 전달
     user_message = (f"나이: {game_stats['age']}세, 건강: {game_stats['health']}, 스트레스: {game_stats['stress']}, "
@@ -25,7 +28,7 @@ def gameResult():
                     "이 사람은 끊임없는 선택의 연속 속에서 자신을 정의하고 있습니다. "
                     "이 선택들이 그의 삶에 어떤 영향을 미치고, 어떤 길을 만들어 나가는지에 대한 철학적 통찰을 제공해 주세요."
                     "응답은 1300자 이내로 하되, 문장이 자연스럽게 마무리되도록 하십시오."
-                    "해당 game_stats를 바탕으로 해당 유저의 인생을 분석하여 응답을 5줄 이내로 작성해 주세요."
+                    "해당 게임 결과를 바탕으로 해당 유저의 인생을 분석하여 응답을 5줄 이내로 작성해 주세요."
                     "이후 해당 game_stats에 대한 메타인지 피드백을 제공하며 삶에 대한 철학적인 통찰을 제공해 주세요.")
 
     # OpenAI에게 전달할 메시지 설정
@@ -45,10 +48,9 @@ def gameResult():
     # AI 피드백 생성
     try:
         result = openai.ChatCompletion.create(
-            model="gpt-4",
+            model="gpt-4o-mini",
             messages=messages,
-            temperature=0.8,
-            max_tokens=500
+            temperature=0.8
         )
         chatbot_reply = result['choices'][0]['message']['content']
         print("AI 응답: ", chatbot_reply)  # AI 응답 출력
