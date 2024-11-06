@@ -3,18 +3,24 @@ from flask_cors import CORS
 import aichatbot
 import aiGame
 import emotion
+import mysql.connector
 
 app = Flask(__name__)
 CORS(app)
-
 # API 키는 환경 변수에서 자동으로 불러옵니다.
 # .\.venv\Scripts\activate
 # python app.py
+
+print("app.py 파일 실행")
 
 # aichatbot 모듈의 초기화 함수 호출
 aichatbot.create_conversations_table()  # 데이터베이스 초기화
 
 # 라우트 정의
+
+@app.route('/')
+def home():
+    return "서버가 정상적으로 실행되었습니다!"
 
 # AI Chatbot의 '/chat' 라우트
 @app.route('/chat', methods=['POST'])
@@ -40,4 +46,4 @@ def test_result():
     return aichatbot.test_result(user_id)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)

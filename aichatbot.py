@@ -12,8 +12,8 @@ import mysql.connector
 db_config = {
     'user': 'root',
     'password': '4753',
-    'host': 'localhost',
-    'database': 'db_connect'
+    'host': 'localhost:3306',
+    'database': 'metafuse'
 }
 
 client = OpenAI()

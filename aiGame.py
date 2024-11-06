@@ -1,5 +1,6 @@
 from flask import jsonify, request  # request 임포트 추가
 import openai
+import mysql.connector
 
 print("aiGame 실행 전")
 
